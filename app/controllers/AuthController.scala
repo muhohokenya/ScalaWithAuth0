@@ -21,10 +21,9 @@ class AuthController @Inject()
   private val clientSecret = "Y4NPnuRW17Xp0CqXru-cvasBIz_mT9nTQnHlIk6MkDAa-9UuSe7H5Dt793iAjppM"
   private val audience = "http://localhost:9000/identifier"
   private val grantType = "password"
-//  private val username = "muhohoweb@gmail.com"
-//  private val password = "gitpass2016@2024"
 
-  def login(): Action[JsValue] = Action.async(parse.json) { implicit request =>
+  def login(): Action[JsValue] = Action.async(parse.json) {
+    implicit request =>
     request.body.validate[LoginRequest].fold(
       // Validation failure
       errors => {
@@ -45,8 +44,8 @@ class AuthController @Inject()
                 "expires_in" -> expiresIn,
                 "token_type" -> tokenType
               ))
-            case Left((statusCode, errorMessage)) =>
-              BadRequest(Json.obj("error" -> errorMessage)).withHeaders("WWW-Authenticate" -> "Basic realm=\"Your Realm\"")
+            case Left(errorMessage) =>
+              BadRequest(Json.obj("error" -> errorMessage))
           }.recover {
             case ex: Throwable => InternalServerError(Json.obj("message" -> "Failed to obtain token"))
           }
@@ -55,7 +54,7 @@ class AuthController @Inject()
     )
   }
 
-  private def getToken(password: String, username: String): Future[Either[(Int, String), (String, Long, String)]] = {
+  private def getToken(password: String, username: String): Future[Either[String, (String, Long, String)]] = {
     val url = "https://dev-lbyr1g2rm84dajwz.us.auth0.com/oauth/token"
     val payload: JsObject = Json.obj(
       "client_id" -> clientId,
@@ -77,10 +76,9 @@ class AuthController @Inject()
             Right((accessToken, expiresIn, tokenType))
           case _ =>
             val errorMessage = (response.json \ "error_description").asOpt[String].getOrElse("Invalid username or password")
-            Left(401, errorMessage)
+            Left(errorMessage)
         }
       }
   }
-
 
 }

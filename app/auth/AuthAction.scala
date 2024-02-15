@@ -31,6 +31,8 @@ class AuthAction @Inject()
     extractBearerToken(request) map { token =>
       authService.validateJwt(token) match {
         case Success(claim) => block(UserRequest(claim, token, request))
+
+        println()
         // token was valid - proceed!
         case Failure(t) => Future.successful(Results.Unauthorized(t.getMessage))
         // token was invalid - return 401
