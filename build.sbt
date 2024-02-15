@@ -10,6 +10,11 @@ libraryDependencies ++= Seq(
   "com.auth0" % "jwks-rsa" % "0.22.0"
 )
 
+// https://mvnrepository.com/artifact/com.typesafe.play/play-ws
+//libraryDependencies += "com.typesafe.play" %% "play-ws" % "2.9.1"
+libraryDependencies += ws
+
+
 
 assembly / assemblyMergeStrategy := {
   case PathList("META-INF", "versions", "9", "module-info.class") => MergeStrategy.discard

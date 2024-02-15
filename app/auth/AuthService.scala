@@ -32,7 +32,7 @@ class AuthService @Inject()(config: Configuration) {
   def validateJwt(token: String): Try[JwtClaim] = for {
     jwk <- getJwk(token)           // Get the secret key for this token
     claims <- JwtJson.decode(token, jwk.getPublicKey, Seq(JwtAlgorithm.RS256)) // Decode the token using the secret key
-    _ <- validateClaims(claims)     // validate the data stored inside the token
+    _ <- validateClaims(claims)    // validate the data stored inside the token
   } yield claims
 
 

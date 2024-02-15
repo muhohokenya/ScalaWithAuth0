@@ -16,10 +16,11 @@ class StudentController @Inject()
   def getStudents: Action[AnyContent] = authAction {
     val config = ConfigFactory.load()
     val students = List(
-      Student(1, "Jeremy", 34),
-      Student(1, "Alice", 20),
-      Student(2, "Bob", 22),
-      Student(3, "Charlie", 23)
+      Student(1, "Jack", 32),
+      Student(1, "Alice", 30),
+      Student(2, "Bob", 24),
+      Student(3, "Charlie", 23),
+      Student(3, "Samuel", 49)
     )
     Ok(Json.toJson(students))
   }
