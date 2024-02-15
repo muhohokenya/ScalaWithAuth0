@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scala-api
+  labels:
+    app: scala-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scala-api
+  template:
+    metadata:
+      name: scala-api
+      labels:
+        app: scala-api
+    spec:
+      containers:
+        - name: scala-api
+          image: muhohoweb/new_scala_api
+          env:
+            - name:  DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_PASSWORD
+                  name: sam-config
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: my-secret
+                  key: DB_USER
+            - name: PLAY_HTTP_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: my-secret
+                  key: PLAY_HTTP_SECRET_KEY
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: scala-api-service
+spec:
+  selector:
+    app: scala-api
+  ports:
+    - protocol: TCP
+      port: 9000
+      targetPort: 9000
+      nodePort: 30007
+  type: NodePort

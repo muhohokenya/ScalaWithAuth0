@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  app:
+    image: muhohoweb/new_scala_api
+    container_name: "new_scala_api_container"
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - DB_USER="atq_user"
+      - PLAY_HTTP_SECRET_KEY="Pt]6dKANI2Q2au0bM7OQs<:MK=QN2T:OE8tioRV/MJCFyBNXV]wD[Y1o_uIn_EJH"

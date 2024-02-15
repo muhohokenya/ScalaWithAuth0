@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sam-config
+data:
+  DB_PASSWORD: "JHJKHDSKJ94833798573948537"
+  
