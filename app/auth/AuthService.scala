@@ -1,10 +1,9 @@
 package auth
 
 import com.auth0.jwk.UrlJwkProvider
-import pdi.jwt.Jwt.clock
 import pdi.jwt.{JwtAlgorithm, JwtBase64, JwtClaim, JwtJson}
 import play.api.Configuration
-
+import play.libs.Json
 import java.time.Clock
 import javax.inject.Inject
 import scala.util.{Failure, Success, Try}
@@ -65,10 +64,15 @@ class AuthService @Inject()(config: Configuration) {
 
   // Validates the claims inside the token. 'isValid' checks the issuedAt, expiresAt,
   // issuer and audience fields.
-  private val validateClaims = (claims: JwtClaim)=>
-    if (claims.isValid(issuer,audience)) {
+  private val validateClaims = (claims: JwtClaim) => {
+    if (claims.isValid(issuer, audience)) {
+
+      val permission = Json.parse(claims.content)
+
+      println(permission.get("permissions"))
       Success(claims)
     } else {
       Failure(new Exception("The JWT did not pass validation"))
     }
+  }
 }
